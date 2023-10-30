@@ -269,7 +269,7 @@ class Thread:
                 # This is where you integrate the message sending mechanism of ModMail
                 out_of_hours_embed = discord.Embed(
                 title="Support Hours", 
-                description=f"You have opened a ticket outside of supprt hours. We will open in `{hours_until_open} hours and {minutes_until_open} minutes`, please see our open hours listed in <#1168336690859999362>. Our community support will attend to your issue when available. Please note that complex issues will take longer to be addressed.", 
+                description=f"You have opened a ticket outside of supprt hours. We will open in `{hours_until_open} hours and {minutes_until_open} minutes`, please see our open hours listed in <#802801618180898857>. Our community support will attend to your issue when available. Please note that complex issues will take longer to be addressed.", 
                 color=0xff0000  # Red color, adjust as needed
                 )
                 await self._recipient.send(embed=out_of_hours_embed)
