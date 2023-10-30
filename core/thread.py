@@ -10,6 +10,7 @@ import typing
 import warnings
 from datetime import timedelta
 from types import SimpleNamespace
+import pytz
 
 import isodate
 
@@ -238,7 +239,41 @@ class Thread:
                     close_emoji = self.bot.config["close_emoji"]
                     close_emoji = await self.bot.convert_emoji(close_emoji)
                     await self.bot.add_reaction(msg, close_emoji)
+                    
+              # Define your timezone and working hours
+                timezone_str = 'Australia/Sydney'  # Replace with your timezone, e.g., 'America/New_York'
+                timezone = pytz.timezone(timezone_str)
+                current_time = datetime.now(timezone)
+                
+                # Define the opening and closing hours in 24-hour format
+                opening_hour = 8  # e.g., 9 AM
+                closing_hour = 20  # e.g., 5 PM
 
+                next_opening_time = current_time.replace(hour=opening_hour, minute=0, second=0, microsecond=0)
+
+                # Check if current time is outside operating hours
+                if current_time.hour < opening_hour or current_time.hour >= closing_hour:
+                    print("Outside of opening hours!")  # This is the print statement for debugging.
+                    # Calculate hours until opening
+                    if current_time.hour >= closing_hour:
+                                next_opening_time += timedelta(days=1)
+                    # Calculate the time difference
+                    difference = next_opening_time - current_time
+                
+                    # Get hours and minutes
+                    hours_until_open = difference.seconds // 3600
+                    minutes_until_open = (difference.seconds // 60) % 60
+                    
+                # Send the message
+                
+                # This is where you integrate the message sending mechanism of ModMail
+                out_of_hours_embed = discord.Embed(
+                title="Support Hours", 
+                description=f"You have opened a ticket outside of supprt hours. We will open in `{hours_until_open} hours and {minutes_until_open} minutes`, please see our open hours listed in <#1168336690859999362>. Our community support will attend to your issue when available. Please note that complex issues will take longer to be addressed.", 
+                color=0xff0000  # Red color, adjust as needed
+                )
+                await self._recipient.send(embed=out_of_hours_embed)
+                
         async def send_persistent_notes():
             notes = await self.bot.api.find_notes(self.recipient)
             ids = {}
